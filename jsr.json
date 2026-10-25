@@ -1,0 +1,23 @@
+{
+  "name": "@kanchingyg/dbwatch",
+  "version": "0.1.0",
+  "description": "Git-style live row diff for SQLite/D1/Postgres around any command, with instant rollback",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/cli.ts",
+    "./bridge": "./src/bridge.ts"
+  },
+  "publish": {
+    "include": [
+      "src/**/*.ts",
+      "LICENSE",
+      "README.md",
+      "SKILL.md",
+      "jsr.json"
+    ],
+    "exclude": [
+      "src/**/*.test.ts",
+      "src/**/*.spec.ts"
+    ]
+  }
+}
