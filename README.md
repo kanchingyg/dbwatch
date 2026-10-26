@@ -6,10 +6,6 @@
 [![JSR Score](https://jsr.io/badges/@kanchingyg/dbwatch/score)](https://jsr.io/@kanchingyg/dbwatch/score)
 [![Runtime](https://img.shields.io/badge/runtime-Node_%7C_Bun_%7C_Deno-f9f1e1)](https://github.com/kanchingyg/dbwatch)
 [![license](https://img.shields.io/github/license/kanchingyg/dbwatch)](https://github.com/kanchingyg/dbwatch/blob/HEAD/LICENSE)
-[![npm](https://img.shields.io/npm/v/dbwatch)](https://www.npmjs.com/package/@kanchingyg/dbwatch)
-[![JSR](https://jsr.io/badges/@kanchingyg/dbwatch)](https://jsr.io/@kanchingyg/dbwatch)
-[![Bun](https://img.shields.io/badge/runtime-Node_%7C_Bun-f9f1e1)](https://github.com/kanchingyg/dbwatch)
-[![license](https://img.shields.io/github/license/kanchingyg/dbwatch)](https://github.com/kanchingyg/dbwatch/blob/HEAD/LICENSE)
 
 **One line:** `npx @kanchingyg/dbwatch sqlite:./app.db -- npm test` (or `bunx @kanchingyg/dbwatch sqlite:./app.db -- bun test`): git-style SQLite/D1 row diff around any command with instant `--revert`.
 
@@ -40,27 +36,6 @@ npx @kanchingyg/dbwatch sqlite:./local.db -- npm test
 bunx @kanchingyg/dbwatch sqlite:./local.db -- bun test
 npx @kanchingyg/dbwatch sqlite:./local.db --revert --allow-write -- npm test
 npx @kanchingyg/dbwatch --mcp
-```
-
-## MCP tools
-
-| Tool | Purpose |
-| --- | --- |
-| `run_with_db_diff` | Wrap a command; returns exit code + compact row diff (`--allow-write`; `--dry-run` simulates) |
-| `revert_last_diff` | Apply inverse SQL (`--allow-write`; `--dry-run` previews SQL) |
-| `explain_side_effects` | Two-line local summary via Ollama / OpenAI-compatible API |
-
-Add to Cursor or Claude Code:
-
-```json
-{
-  "mcpServers": {
-    "dbwatch": {
-      "command": "npx",
-      "args": ["-y", "@kanchingyg/dbwatch", "--mcp"]
-    }
-  }
-}
 ```
 
 ## Local models
@@ -114,11 +89,10 @@ import * as bridge from "jsr:@kanchingyg/dbwatch/bridge";
 
 ## Runtime Safety and Guardrails
 
-- **Stdio frame isolation**: When `--mcp` is active, `hijackStdoutForMcp()` redirects accidental `console.log` calls to `stderr` so JSON-RPC 2.0 frames on `stdout` never corrupt.
-- **Read-only by default**: Mutating tools (`mutates: true`) are blocked in `--dry-run` mode and require explicit `--allow-write` authorization.
-- **Loop breaker**: Repeated identical `(toolName, args)` invocations are hashed with SHA-256 and halted after 3 consecutive repeats to prevent runaway agent loops.
-- **Context budget truncation**: Tool outputs are middle-truncated (`60%` head / `40%` tail) scaled to the probed local model `n_ctx` (Ollama `/api/show`, llama.cpp `/props`, vLLM `/v1/models`).
-- **Secret redaction and path normalization**: AWS keys (`AKIA*`, `ASIA*`), bearer tokens, and `sk-*` keys are scrubbed before returning tool output, and Windows drive paths (`C:\...`) translate cleanly to `/mnt/c/...` when WSL mode is enabled.
+- **Stdio frame isolation**: `--mcp` keeps JSON-RPC on `stdout` clean.
+- **Read-only default**: `run_with_db_diff` / `revert_last_diff` need `--allow-write`; `--dry-run` simulates.
+- **Loop breaker**: Identical MCP tool calls halt after three repeats.
+- **Revert SQL**: Inverse statements use quoted identifiers and escaped literals (SQLite/D1 local files only today).
 
 ## License
 
