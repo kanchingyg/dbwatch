@@ -1,0 +1,58 @@
+{
+  "name": "@kanchingyg/dbwatch",
+  "version": "0.1.1",
+  "description": "Git-style live row diff for SQLite/D1/Postgres around any command, with instant rollback",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "dbwatch": "./dist/cli.js"
+  },
+  "main": "./dist/cli.js",
+  "exports": {
+    ".": "./dist/cli.js",
+    "./bridge": "./dist/bridge.js"
+  },
+  "files": [
+    "dist",
+    "SKILL.md",
+    "README.md",
+    "LICENSE",
+    "jsr.json"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && vitest run",
+    "prepublishOnly": "npm run build",
+    "prepack": "npm run build"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "publint": "^0.3.12",
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.5"
+  },
+  "author": "Augusto Cerrutti <augustocerruttisatto@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kanchingyg/dbwatch.git"
+  },
+  "mcpName": "io.github.kanchingyg/dbwatch",
+  "homepage": "https://github.com/kanchingyg/dbwatch#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "cli",
+    "typescript",
+    "sqlite",
+    "postgresql",
+    "cloudflare-d1",
+    "database",
+    "diff",
+    "testing",
+    "rollback"
+  ]
+}
